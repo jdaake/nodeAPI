@@ -3,17 +3,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const MONGODB_URI = 'mongodb+srv://jdaake:KIsMYluCDtG8RnPi@cluster0-ndib1.mongodb.net/messages';
-
 const multer = require('multer');
-
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
-
-
 const app = express();
-
 const port = 8080;
-
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images');
@@ -22,7 +16,6 @@ const fileStorage = multer.diskStorage({
         cb(null, new Date().toISOString() + '-' + file.originalname);
     }
 });
-
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
@@ -52,7 +45,6 @@ app.use((req, res, next) => {
 app.use('/feed', feedRoutes);
 app.use('/auth', authRoutes);
 
-
 app.use((error, req, res, next) => {
     console.log(error);
     const status = error.statusCode || 500;
@@ -66,6 +58,7 @@ app.use((error, req, res, next) => {
 
 mongoose.connect(MONGODB_URI)
     .then(result => {
-        app.listen(8080);
+        app.listen(port);
         console.log(`App is listing on port ${port}!`);
-    }).catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
